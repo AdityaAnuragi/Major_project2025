@@ -1,1 +1,27 @@
+How to run code:
+
+Execute these commands if it's the first time you're attempting to run this Backend:
+
+1, python -m venv .venv
+
+2, .venv\Scripts\activate.bat (if you're using command prompt)
+   .venv\Scripts\Activate.ps1 (if you're using powershell)
+
+3, pip install -r requirements.txt
+
+Execute these commands every time:
+
+1, 
+
+2, 
+
+    (No need to execute this if you already activated the virtual environment)
+    (if you see a (.venv) in your terminal, eg '(.venv) D:\Major project', then the virtual enviroment is activated, otherwise it's not and process with the command below)
+
+   .venv\Scripts\activate.bat (if you're using command prompt)
+   .venv\Scripts\Activate.ps1 (if you're using powershell)
+
+3, python main.py
+
+
 Backend folder is completely Adithya's to work with 
