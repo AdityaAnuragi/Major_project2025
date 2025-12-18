@@ -21,7 +21,8 @@ Execute these commands every time:
    .venv\Scripts\activate.bat (if you're using command prompt)
    .venv\Scripts\Activate.ps1 (if you're using powershell)
 
-3, python main.py
+3, python main.py (if you wanna launch the server)
+   python script.py (if you wanna just execute the script itself)
 
 
 Backend folder is completely Adithya's to work with 
