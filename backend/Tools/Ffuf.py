@@ -3,14 +3,25 @@ from copy import deepcopy
 
 class Ffuf:
     __mapper = {
-        "timeout": lambda x: f"-t {x}",
-        "threads": lambda x: f"-threads {x}",
+        # value-based attributes
+        "wordlist": lambda value: f"-w {value}:FUZZ",
+        "target_url": lambda value: f"-u {value}",
+        "threads": lambda value: f"-t {value}",
+        "match_status": lambda value: f"-mc {value}",
+
+        # flag-only attributes (value is ignored)
+        "follow_redirects": lambda value: "-r",
+        "ignore_comments": lambda value: "-ic",
+        "non_interactive": lambda value: "-noninteractive",
+        "recursion": lambda value: "-recursion",
+        "silent_mode": lambda value: "-s",
     }
+
 
     def __init__(self):
         self.__command = ["ffuf"]
 
-    def addAttribute(self, attribute, value):
+    def addAttribute(self, attribute, value = ''):
         if attribute not in self.__class__.__mapper:
             print("ABSENT, attribute not yet mapped")
             return
