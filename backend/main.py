@@ -10,14 +10,17 @@ app = Flask(__name__)
 def health() -> tuple[dict, int]:
     print("Inside the health check GET endpoint")
     
-    result = subprocess.run(
-        ["ffuf", "-V"],
-        capture_output=True,
-        text=True,
-        check=True
-    )
-    print("STDOUT:", result.stdout)
-    print("STDERR:", result.stderr)
+    # result = subprocess.run(
+    #     ['ffuf', '-u', 'http://demo.testfire.net/FUZZ', '-w', 'words.txt'],
+    #     shell=True,
+    #     capture_output=True,
+    #     text=True,
+    #     check=True
+    # )
+    # print("STDOUT:", result.stdout)
+    # print("STDERR:", result.stderr)
+
+    os.system('ffuf -u http://demo.testfire.net/FUZZ -w words.txt')
 
     return {"status": "ok"}, 200
 
