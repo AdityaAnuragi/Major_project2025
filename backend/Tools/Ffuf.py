@@ -8,6 +8,8 @@ class Ffuf:
         "target_url": lambda value: f"-u {value}",
         "threads": lambda value: f"-t {value}",
         "match_status": lambda value: f"-mc {value}",
+        "extensions": lambda value: f"-e {value}",
+        "filter_size": lambda value: f"-fs {value}",
 
         # flag-only attributes (value is ignored)
         "follow_redirects": lambda value: "-r",
@@ -34,11 +36,4 @@ class Ffuf:
         return deepcopy(self.__command)
 
     def getCommandString(self):
-        quoted_parts = []
-
-        for arg in self.__command:
-            quoted = " ".join(self.getCommand())
-            quoted_parts.append(quoted)
-
-        command_string = " ".join(quoted_parts)
-        return command_string
+        return " ".join(self.__command)
