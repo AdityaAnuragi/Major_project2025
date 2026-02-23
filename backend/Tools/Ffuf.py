@@ -1,4 +1,4 @@
-import shlex
+# import shlex
 from copy import deepcopy
 
 class Ffuf:
@@ -37,7 +37,7 @@ class Ffuf:
         quoted_parts = []
 
         for arg in self.__command:
-            quoted = shlex.quote(arg)
+            quoted = " ".join(self.getCommand())
             quoted_parts.append(quoted)
 
         command_string = " ".join(quoted_parts)
