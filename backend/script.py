@@ -1,7 +1,8 @@
 import os
 import json
-import requests
+import requests  # used for server tech detection (pre-phase)
 from Tools.Ffuf import Ffuf
+from Tools.XSStrike import XSStrike
 
 default_url = 'testphp.vulnweb.com'
 base_url = 'http://' + (input(f'Enter the base URL (https:// isn\'t need) (press ENTER for default [{default_url}]) : ') or default_url)
@@ -59,74 +60,16 @@ if not endpoints:
     print("No endpoints discovered.")
     exit()
 
-# Phase 3: detect method for each endpoint
-def detect_method(url):
-    # OPTIONS probe
-    try:
-        options_resp = requests.options(url, timeout=5)
-        allow = options_resp.headers.get('Allow', '')
-        if allow:
-            found = []
-            if 'GET' in allow:
-                found.append('GET')
-            if 'POST' in allow:
-                found.append('POST')
-            if found:
-                return found
-    except Exception:
-        pass
+# Phase 3: crawl with XSStrike using ffuf-discovered endpoints as seeds
+with open('seeds.txt', 'w') as f:
+    f.write('\n'.join(endpoints))
 
-    # GET probe - does a query param change the response?
-    get_responsive = False
-    try:
-        baseline = requests.get(url, timeout=5)
-        with_param = requests.get(url + '?test=1', timeout=5)
-        get_responsive = (baseline.status_code != with_param.status_code or
-                          len(baseline.text) != len(with_param.text))
-    except Exception:
-        pass
+xs = XSStrike()
+xs.addAttribute("url", base_url)
+xs.addAttribute("crawl")
+xs.addAttribute("seeds", "seeds.txt")
+xs.addAttribute("skip")
 
-    # POST probe with body
-    post_status = None
-    try:
-        post_resp = requests.post(url, data={'test': '1'}, timeout=5)
-        post_status = post_resp.status_code
-    except Exception:
-        pass
-
-    if post_status == 405:
-        return ['GET']
-    if post_status == 400:
-        return ['POST']
-    if post_status == 200 and get_responsive:
-        return ['GET', 'POST']
-
-    # 200 on POST just means the page rendered — not a POST signal
-    return ['GET']
-
-print("\n--- Method Detection ---")
-results = []
-for index, url in enumerate(endpoints):
-    methods = detect_method(url)
-    results.append((url, methods))
-    print(f"{url}: accepts {', '.join(methods)}")
-    print(f'progress: {index + 1}/ {len(endpoints)}')
-
-# Summary
-get_only  = [(url, m) for url, m in results if m == ['GET']]
-post_only = [(url, m) for url, m in results if m == ['POST']]
-both      = [(url, m) for url, m in results if 'GET' in m and 'POST' in m]
-
-print("\n========== SUMMARY ==========")
-
-print(f"\n[GET only] ({len(get_only)}) - potential reflected XSS / SQLi via query params")
-for url, _ in get_only:
-    print(f"  {url}")
-
-print(f"\n[POST only] ({len(post_only)}) - form-based attacks")
-for url, _ in post_only:
-    print(f"  {url}")
-
-print(f"\n[GET + POST] ({len(both)}) - both vectors possible")
-for url, _ in both:
-    print(f"  {url}")
+xsstrike_command = xs.getCommandString()
+print(f'\nRunning XSStrike: {xsstrike_command}')
+os.system(xsstrike_command)
