@@ -67,6 +67,7 @@ with open('seeds.txt', 'w') as f:
 xs = XSStrike()
 xs.addAttribute("url", base_url)
 xs.addAttribute("crawl")
+xs.addAttribute("level", 3)
 xs.addAttribute("seeds", "seeds.txt")
 xs.addAttribute("skip")
 
