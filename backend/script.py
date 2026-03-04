@@ -3,10 +3,28 @@ import json
 import requests  # used for server tech detection (pre-phase)
 from Tools.Ffuf import Ffuf
 from Tools.XSStrike import XSStrike
+from Tools.RequestContext import RequestContext
 
 default_url = 'testphp.vulnweb.com'
-base_url = 'http://' + (input(f'Enter the base URL (https:// isn\'t need) (press ENTER for default [{default_url}]) : ') or default_url)
+base_url = 'http://' + (input(f'Enter the base URL (http:// isn\'t need) (press ENTER for default [{default_url}]) : ') or default_url)
 fuzz_url = base_url.rstrip('/') + '/FUZZ'
+
+ctx = RequestContext()
+
+cookie = input("Session cookie (ENTER to skip): ").strip()
+if cookie:
+    ctx.set_cookie(cookie)
+
+bearer = input("Bearer token (ENTER to skip): ").strip()
+if bearer:
+    ctx.set_bearer(bearer)
+
+extra = input("Custom headers as 'Key: Value', comma-separated (ENTER to skip): ").strip()
+if extra:
+    for h in extra.split(","):
+        h = h.strip()
+        if h:
+            ctx.add_header(h)
 
 # Pre-phase: detect server tech to choose extensions automatically
 def detect_extensions(base_url):
@@ -41,6 +59,7 @@ ffuf_cmd.addAttribute("ignore_comments")
 ffuf_cmd.addAttribute("non_interactive")
 if extensions:
     ffuf_cmd.addAttribute("extensions", extensions)
+ctx.apply_to_ffuf(ffuf_cmd)
 
 command_string = ffuf_cmd.getCommandString() + " -o results.json -of json"
 print(f'The command to execute is: {command_string}')
@@ -70,6 +89,7 @@ xs.addAttribute("crawl")
 xs.addAttribute("level", 3)
 xs.addAttribute("seeds", "seeds.txt")
 xs.addAttribute("skip")
+ctx.apply_to_xsstrike(xs)
 
 xsstrike_command = xs.getCommandString()
 print(f'\nRunning XSStrike: {xsstrike_command}')
