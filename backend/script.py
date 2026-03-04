@@ -5,7 +5,7 @@ from Tools.Ffuf import Ffuf
 from Tools.XSStrike import XSStrike
 from Tools.RequestContext import RequestContext
 
-default_url = 'testphp.vulnweb.com'
+default_url = 'demo.testfire.net'
 base_url = 'http://' + (input(f'Enter the base URL (http:// isn\'t need) (press ENTER for default [{default_url}]) : ') or default_url)
 fuzz_url = base_url.rstrip('/') + '/FUZZ'
 
@@ -50,11 +50,10 @@ extensions = detect_extensions(base_url)
 
 # Phase 1: discover endpoints with ffuf
 ffuf_cmd = Ffuf()
-ffuf_cmd.addAttribute("wordlist", "words.txt")
+ffuf_cmd.addAttribute("wordlist", "words_testfire.txt")
 ffuf_cmd.addAttribute("target_url", fuzz_url)
 ffuf_cmd.addAttribute("threads", 100)
 ffuf_cmd.addAttribute("match_status", 200)
-ffuf_cmd.addAttribute("follow_redirects")
 ffuf_cmd.addAttribute("ignore_comments")
 ffuf_cmd.addAttribute("non_interactive")
 if extensions:

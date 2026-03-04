@@ -13,7 +13,7 @@ class XSStrike:
         "seeds":             lambda value: f"--seeds {value}",
         "file":              lambda value: f"-f {value}",
         "level":             lambda value: f"-l {value}",
-        "headers":           lambda value: f"--headers {value}",
+        "headers":           lambda value: f'--headers "{value}"',
         "threads":           lambda value: f"-t {value}",
         "delay":             lambda value: f"-d {value}",
         "console_log_level": lambda value: f"--console-log-level {value}",
