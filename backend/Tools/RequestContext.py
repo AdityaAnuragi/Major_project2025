@@ -6,9 +6,9 @@ class RequestContext:
         """e.g. set_cookie("PHPSESSID=abc123")"""
         self._headers.append(f"Cookie: {cookie}")
 
-    def set_bearer(self, token):
-        """e.g. set_bearer("eyJ...")"""
-        self._headers.append(f"Authorization: Bearer {token}")
+    # set_bearer removed — use add_header("Authorization: Bearer <token>") instead
+    # def set_bearer(self, token):
+    #     self._headers.append(f"Authorization: Bearer {token}")
 
     def add_header(self, header):
         """e.g. add_header("X-API-Key: secret")"""

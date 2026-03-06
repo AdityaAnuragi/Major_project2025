@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import requests  # used for server tech detection (pre-phase)
 from Tools.Ffuf import Ffuf
@@ -15,11 +16,7 @@ cookie = input("Session cookie (ENTER to skip): ").strip()
 if cookie:
     ctx.set_cookie(cookie)
 
-bearer = input("Bearer token (ENTER to skip): ").strip()
-if bearer:
-    ctx.set_bearer(bearer)
-
-extra = input("Custom headers as 'Key: Value', comma-separated (ENTER to skip): ").strip()
+extra = input("Custom/auth headers, comma-separated (ENTER to skip)\n  e.g. Authorization: Bearer eyJ..., X-Api-Key: secret\n> ").strip()
 if extra:
     for h in extra.split(","):
         h = h.strip()
@@ -43,10 +40,42 @@ def detect_extensions(base_url):
             return '.jsp,.do,.action'
     except Exception:
         pass
+    probe_map = [
+        ('index.php', '.php', 'PHP (probed)'),
+        ('index.jsp', '.jsp,.do,.action', 'Java/Tomcat (probed)'),
+        ('index.aspx', '.aspx,.asmx', 'ASP.NET (probed)'),
+    ]
+    for filename, exts, label in probe_map:
+        try:
+            r = requests.get(base_url.rstrip('/') + '/' + filename, timeout=5)
+            if r.status_code == 200:
+                print(f"Detected: {label}  →  using {exts}")
+                return exts
+        except Exception:
+            pass
     print("No server tech detected  →  fuzzing bare paths only")
     return None
 
 extensions = detect_extensions(base_url)
+
+def detect_language(base_url):
+    try:
+        resp = requests.get(base_url, timeout=5)
+        lang = resp.headers.get('Content-Language', '').strip()
+        if lang:
+            print(f"Detected language: {lang}")
+            return lang
+        match = re.search(r'<html[^>]+lang=["\']([^"\']+)["\']', resp.text, re.IGNORECASE)
+        if match:
+            lang = match.group(1).strip()
+            print(f"Detected language: {lang}")
+            return lang
+    except Exception:
+        pass
+    print("Language: not detected")
+    return None
+
+detect_language(base_url)
 
 # Phase 1: discover endpoints with ffuf
 ffuf_cmd = Ffuf()
