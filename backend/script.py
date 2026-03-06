@@ -36,7 +36,7 @@ ffuf_cmd.addAttribute("wordlist", "words.txt")
 ffuf_cmd.addAttribute("target_url", fuzz_url)
 ffuf_cmd.addAttribute("threads", 100)
 ffuf_cmd.addAttribute("match_status", 200)
-ffuf_cmd.addAttribute("follow_redirects")
+# ffuf_cmd.addAttribute("follow_redirects")
 ffuf_cmd.addAttribute("ignore_comments")
 ffuf_cmd.addAttribute("non_interactive")
 if extensions:
