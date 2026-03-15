@@ -23,6 +23,8 @@ if extra:
         if h:
             ctx.add_header(h)
 
+quick = input("Quick scan? [y/N]: ").strip().lower() == 'y'
+
 # Pre-phase: detect server tech to choose extensions automatically
 def detect_extensions(base_url):
     try:
@@ -82,7 +84,7 @@ detect_language(base_url)
 # Run 1: Directory fuzzing
 print("\n--- Directory fuzzing ---")
 dir_cmd = Ffuf()
-dir_cmd.addAttribute("wordlist", "directory_fuzzing.txt")
+dir_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "directory_fuzzing.txt")
 dir_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
 dir_cmd.addAttribute("threads", 100)
 dir_cmd.addAttribute("match_status", 200)
@@ -99,7 +101,7 @@ os.system(dir_command)
 # Run 2: File fuzzing
 print("\n--- File fuzzing ---")
 file_cmd = Ffuf()
-file_cmd.addAttribute("wordlist", "file_fuzzing.txt")
+file_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "file_fuzzing.txt")
 file_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
 file_cmd.addAttribute("threads", 100)
 file_cmd.addAttribute("match_status", 200)
@@ -116,7 +118,7 @@ print("\n--- Subdomain fuzzing ---")
 hostname = urlparse(base_url).hostname
 subdomain_url = f"http://FUZZ.{hostname}/"
 sub_cmd = Ffuf()
-sub_cmd.addAttribute("wordlist", "subdomain_fuzzing.txt")
+sub_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "subdomain_fuzzing.txt")
 sub_cmd.addAttribute("target_url", subdomain_url)
 sub_cmd.addAttribute("threads", 100)
 sub_cmd.addAttribute("match_status", 200)
