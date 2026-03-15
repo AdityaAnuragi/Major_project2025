@@ -18,6 +18,7 @@ class Ffuf:
         "non_interactive": lambda value: "-noninteractive",
         "recursion": lambda value: "-recursion",
         "silent_mode": lambda value: "-s",
+        "auto_calibrate": lambda value: "-ac",
     }
 
 
