@@ -25,6 +25,12 @@ if extra:
 
 quick = input("Quick scan? [y/N]: ").strip().lower() == 'y'
 
+threads_input = input("Threads (press ENTER for default [40]): ").strip()
+threads = int(threads_input) if threads_input else 40
+
+rate_input = input("Rate limit req/s (press ENTER for default [100]): ").strip()
+rate = int(rate_input) if rate_input else 100
+
 # Pre-phase: detect server tech to choose extensions automatically
 def detect_extensions(base_url):
     try:
@@ -86,7 +92,8 @@ print("\n--- Directory fuzzing ---")
 dir_cmd = Ffuf()
 dir_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "directory_fuzzing.txt")
 dir_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
-dir_cmd.addAttribute("threads", 100)
+dir_cmd.addAttribute("threads", threads)
+dir_cmd.addAttribute("rate", rate)
 dir_cmd.addAttribute("match_status", 200)
 dir_cmd.addAttribute("ignore_comments")
 dir_cmd.addAttribute("non_interactive")
@@ -103,7 +110,8 @@ print("\n--- File fuzzing ---")
 file_cmd = Ffuf()
 file_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "file_fuzzing.txt")
 file_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
-file_cmd.addAttribute("threads", 100)
+file_cmd.addAttribute("threads", threads)
+file_cmd.addAttribute("rate", rate)
 file_cmd.addAttribute("match_status", 200)
 file_cmd.addAttribute("ignore_comments")
 file_cmd.addAttribute("non_interactive")
@@ -120,7 +128,8 @@ subdomain_url = f"http://FUZZ.{hostname}/"
 sub_cmd = Ffuf()
 sub_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "subdomain_fuzzing.txt")
 sub_cmd.addAttribute("target_url", subdomain_url)
-sub_cmd.addAttribute("threads", 100)
+sub_cmd.addAttribute("threads", threads)
+sub_cmd.addAttribute("rate", rate)
 sub_cmd.addAttribute("match_status", 200)
 sub_cmd.addAttribute("ignore_comments")
 sub_cmd.addAttribute("non_interactive")

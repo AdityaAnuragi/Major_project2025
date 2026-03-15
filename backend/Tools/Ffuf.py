@@ -10,6 +10,7 @@ class Ffuf:
         "match_status": lambda value: f"-mc {value}",
         "extensions": lambda value: f"-e {value}",
         "filter_size": lambda value: f"-fs {value}",
+        "rate": lambda value: f"-rate {value}",
         "header": lambda value: f'-H "{value}"',
 
         # flag-only attributes (value is ignored)
