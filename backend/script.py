@@ -2,13 +2,13 @@ import os
 import re
 import json
 import requests  # used for server tech detection (pre-phase)
+from urllib.parse import urlparse
 from Tools.Ffuf import Ffuf
 from Tools.XSStrike import XSStrike
 from Tools.RequestContext import RequestContext
 
 default_url = 'demo.testfire.net'
 base_url = 'http://' + (input(f'Enter the base URL (http:// isn\'t need) (press ENTER for default [{default_url}]) : ') or default_url)
-fuzz_url = base_url.rstrip('/') + '/FUZZ'
 
 ctx = RequestContext()
 
@@ -77,32 +77,63 @@ def detect_language(base_url):
 
 detect_language(base_url)
 
-# Phase 1: discover endpoints with ffuf
-ffuf_cmd = Ffuf()
-ffuf_cmd.addAttribute("wordlist", "words_testfire.txt")
-ffuf_cmd.addAttribute("target_url", fuzz_url)
-ffuf_cmd.addAttribute("threads", 100)
-ffuf_cmd.addAttribute("match_status", 200)
-# ffuf_cmd.addAttribute("follow_redirects")
-ffuf_cmd.addAttribute("ignore_comments")
-ffuf_cmd.addAttribute("non_interactive")
+# Phase 1: discover endpoints with ffuf (3 passes)
+
+# Run 1: Directory fuzzing
+print("\n--- Directory fuzzing ---")
+dir_cmd = Ffuf()
+dir_cmd.addAttribute("wordlist", "directory_fuzzing.txt")
+dir_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
+dir_cmd.addAttribute("threads", 100)
+dir_cmd.addAttribute("match_status", 200)
+dir_cmd.addAttribute("ignore_comments")
+dir_cmd.addAttribute("non_interactive")
 if extensions:
-    ffuf_cmd.addAttribute("extensions", extensions)
-ctx.apply_to_ffuf(ffuf_cmd)
+    dir_cmd.addAttribute("extensions", extensions)
+ctx.apply_to_ffuf(dir_cmd)
+dir_command = dir_cmd.getCommandString() + " -o results_directory.json -of json"
+print(f'The command to execute is: {dir_command}')
+os.system(dir_command)
 
-command_string = ffuf_cmd.getCommandString() + " -o results.json -of json"
-print(f'The command to execute is: {command_string}')
-os.system(command_string)
+# Run 2: File fuzzing
+print("\n--- File fuzzing ---")
+file_cmd = Ffuf()
+file_cmd.addAttribute("wordlist", "file_fuzzing.txt")
+file_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
+file_cmd.addAttribute("threads", 100)
+file_cmd.addAttribute("match_status", 200)
+file_cmd.addAttribute("ignore_comments")
+file_cmd.addAttribute("non_interactive")
+ctx.apply_to_ffuf(file_cmd)
+file_command = file_cmd.getCommandString() + " -o results_file.json -of json"
+print(f'The command to execute is: {file_command}')
+os.system(file_command)
 
-# Phase 2: load discovered endpoints
-if not os.path.exists('results.json'):
-    print("results.json not found - ffuf likely failed. Check the command above.")
-    exit()
+# Run 3: Subdomain fuzzing
+print("\n--- Subdomain fuzzing ---")
+hostname = urlparse(base_url).hostname
+subdomain_url = f"http://FUZZ.{hostname}/"
+sub_cmd = Ffuf()
+sub_cmd.addAttribute("wordlist", "subdomain_fuzzing.txt")
+sub_cmd.addAttribute("target_url", subdomain_url)
+sub_cmd.addAttribute("threads", 100)
+sub_cmd.addAttribute("match_status", 200)
+sub_cmd.addAttribute("ignore_comments")
+sub_cmd.addAttribute("non_interactive")
+ctx.apply_to_ffuf(sub_cmd)
+sub_command = sub_cmd.getCommandString() + " -o results_subdomain.json -of json"
+print(f'The command to execute is: {sub_command}')
+os.system(sub_command)
 
-with open('results.json') as f:
-    data = json.load(f)
-
-endpoints = [r['url'] for r in data.get('results', []) if r['length'] > 0]
+# Phase 2: merge all discovered endpoints
+endpoints = []
+for fname in ['results_directory.json', 'results_file.json', 'results_subdomain.json']:
+    if not os.path.exists(fname):
+        print(f"{fname} not found - skipping")
+        continue
+    with open(fname) as f:
+        data = json.load(f)
+    endpoints += [r['url'] for r in data.get('results', []) if r['length'] > 0]
 
 if not endpoints:
     print("No endpoints discovered.")
