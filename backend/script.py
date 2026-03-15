@@ -167,4 +167,18 @@ ctx.apply_to_xsstrike(xs)
 
 xsstrike_command = xs.getCommandString()
 print(f'\nRunning XSStrike: {xsstrike_command}')
-os.system(xsstrike_command)
+os.system(xsstrike_command + " > xss_output.txt")
+
+with open('xss_output.txt') as f:
+    lines = f.readlines()
+
+confirmed = [l.strip() for l in lines if '[++]' in l]
+potential = [l.strip() for l in lines if 'potentially vulnerable' in l.lower()]
+
+print("\n--- XSS Scan Summary ---")
+if confirmed:
+    print(f"Confirmed XSS: {len(confirmed)}")
+elif potential:
+    print(f"Potentially vulnerable: {len(potential)}")
+else:
+    print("No XSS vulnerabilities found.")
