@@ -21,3 +21,10 @@ class RequestContext:
     def apply_to_xsstrike(self, xs):
         if self._headers:
             xs.addAttribute("headers", "\\n".join(self._headers))
+
+    def apply_to_sqlmap(self, sqm):
+        for h in self._headers:
+            if h.startswith("Cookie: "):
+                sqm.addAttribute("cookie", h[len("Cookie: "):])
+            else:
+                sqm.addAttribute("headers", h)

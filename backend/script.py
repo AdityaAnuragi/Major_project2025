@@ -5,6 +5,7 @@ import requests  # used for server tech detection (pre-phase)
 from urllib.parse import urlparse
 from Tools.Ffuf import Ffuf
 from Tools.XSStrike import XSStrike
+from Tools.Sqlmap import Sqlmap
 from Tools.RequestContext import RequestContext
 
 default_url = 'demo.testfire.net'
@@ -23,7 +24,7 @@ if extra:
         if h:
             ctx.add_header(h)
 
-quick = input("Quick scan? [y/N]: ").strip().lower() == 'y'
+quick = input("Quick scan? [y/N] (Default: No): ").strip().lower() == 'y'
 
 threads_input = input("Threads (press ENTER for default [40]): ").strip()
 threads = int(threads_input) if threads_input else 40
@@ -182,3 +183,31 @@ elif potential:
     print(f"Potentially vulnerable: {len(potential)}")
 else:
     print("No XSS vulnerabilities found.")
+
+# Phase 4: SQL injection detection with sqlmap
+print("\n--- SQL Injection Detection ---")
+sqm = Sqlmap()
+sqm.addAttribute("urls_file", "seeds.txt")
+sqm.addAttribute("batch")
+sqm.addAttribute("forms")
+sqm.addAttribute("level", 1)
+sqm.addAttribute("risk", 1)
+ctx.apply_to_sqlmap(sqm)
+
+sqlmap_command = sqm.getCommandString()
+print(f'Running sqlmap: {sqlmap_command}')
+os.system(sqlmap_command + " > sqli_output.txt 2>&1")
+
+with open('sqli_output.txt', errors='ignore') as f:
+    sqli_lines = f.readlines()
+
+sqli_confirmed = [l.strip() for l in sqli_lines if '[INFO]' in l and 'injectable' in l.lower()]
+sqli_potential = [l.strip() for l in sqli_lines if 'might be injectable' in l.lower()]
+
+print("\n--- SQLi Scan Summary ---")
+if sqli_confirmed:
+    print(f"Confirmed SQLi: {len(sqli_confirmed)} parameter(s) found vulnerable")
+elif sqli_potential:
+    print(f"Potentially vulnerable: {len(sqli_potential)} parameter(s) flagged")
+else:
+    print("No SQL injection vulnerabilities found.")
