@@ -88,7 +88,7 @@ detect_language(base_url)
 
 # Phase 1: discover endpoints with ffuf (3 passes)
 
-# Run 1: Directory fuzzing
+# Run 1: Directory fuzzing (extension fuzzing aswell)
 print("\n--- Directory fuzzing ---")
 dir_cmd = Ffuf()
 dir_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "directory_fuzzing.txt")
