@@ -23,4 +23,13 @@ pip install -r vendor/XSStrike/requirements.txt
 
 ---
 
+## 3. Set up sqlmap
+
+**Windows & Mac:**
+```bash
+git clone https://github.com/sqlmapproject/sqlmap.git vendor/sqlmap
+```
+
+---
+
 That's it. You're good to go.
