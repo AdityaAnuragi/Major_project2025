@@ -189,8 +189,12 @@ potential = [l.strip() for l in lines if 'potentially vulnerable' in l.lower()]
 print("\n--- XSS Scan Summary ---")
 if confirmed:
     print(f"Confirmed XSS: {len(confirmed)}")
+    for line in confirmed:
+        print(f"  {line}")
 elif potential:
     print(f"Potentially vulnerable: {len(potential)}")
+    for line in potential:
+        print(f"  {line}")
 else:
     print("No XSS vulnerabilities found.")
 
@@ -217,7 +221,11 @@ sqli_potential = [l.strip() for l in sqli_lines if 'might be injectable' in l.lo
 print("\n--- SQLi Scan Summary ---")
 if sqli_confirmed:
     print(f"Confirmed SQLi: {len(sqli_confirmed)} parameter(s) found vulnerable")
+    for line in sqli_confirmed:
+        print(f"  {line}")
 elif sqli_potential:
     print(f"Potentially vulnerable: {len(sqli_potential)} parameter(s) flagged")
+    for line in sqli_potential:
+        print(f"  {line}")
 else:
     print("No SQL injection vulnerabilities found.")
