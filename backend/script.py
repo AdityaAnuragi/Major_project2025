@@ -84,14 +84,24 @@ def detect_language(base_url):
     print("Language: not detected")
     return None
 
-detect_language(base_url)
+lang = detect_language(base_url)
+lang_code = lang.split('-')[0].lower() if lang else 'en'
+
+def get_wordlist(scan_type, quick, lang_code):
+    folder = 'quick' if quick else 'full'
+    path = f'wordlists/{folder}/{lang_code}/{scan_type}.txt'
+    if not os.path.exists(path):
+        if lang_code != 'en':
+            print(f"No {lang_code} wordlist for {scan_type} — falling back to English")
+        path = f'wordlists/{folder}/en/{scan_type}.txt'
+    return path
 
 # Phase 1: discover endpoints with ffuf (3 passes)
 
 # Run 1: Directory fuzzing (extension fuzzing aswell)
 print("\n--- Directory fuzzing ---")
 dir_cmd = Ffuf()
-dir_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "directory_fuzzing.txt")
+dir_cmd.addAttribute("wordlist", get_wordlist('directory', quick, lang_code))
 dir_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
 dir_cmd.addAttribute("threads", threads)
 dir_cmd.addAttribute("rate", rate)
@@ -109,7 +119,7 @@ os.system(dir_command)
 # Run 2: File fuzzing
 print("\n--- File fuzzing ---")
 file_cmd = Ffuf()
-file_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "file_fuzzing.txt")
+file_cmd.addAttribute("wordlist", get_wordlist('file', quick, lang_code))
 file_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
 file_cmd.addAttribute("threads", threads)
 file_cmd.addAttribute("rate", rate)
@@ -127,7 +137,7 @@ print("\n--- Subdomain fuzzing ---")
 hostname = urlparse(base_url).hostname
 subdomain_url = f"http://FUZZ.{hostname}/"
 sub_cmd = Ffuf()
-sub_cmd.addAttribute("wordlist", "quick_scan.txt" if quick else "subdomain_fuzzing.txt")
+sub_cmd.addAttribute("wordlist", get_wordlist('subdomain', quick, lang_code))
 sub_cmd.addAttribute("target_url", subdomain_url)
 sub_cmd.addAttribute("threads", threads)
 sub_cmd.addAttribute("rate", rate)

