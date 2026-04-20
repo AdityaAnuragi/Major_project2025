@@ -14,6 +14,8 @@ class Sqlmap:
         "headers":   lambda value: f'--headers "{value}"',
 
         # flag-only attributes (value is ignored)
+        "time_sec":  lambda value: f"--time-sec={value}",
+        "technique": lambda value: f"--technique={value}",
         "batch":     lambda value: "--batch",
         "forms":     lambda value: "--forms",
     }

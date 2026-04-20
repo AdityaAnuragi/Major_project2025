@@ -16,6 +16,7 @@ def health() -> tuple[dict, int]:
 @app.post("/scan")
 def create_scan() -> tuple[dict, int]:
     data = request.get_json(silent=True) or {}
+    print("Received:", data)
 
     url = data.get("url") or DEFAULT_URL
     cookie = data.get("cookie") or None
@@ -24,7 +25,10 @@ def create_scan() -> tuple[dict, int]:
     threads = int(data.get("threads", DEFAULT_THREADS))
     rate = int(data.get("rate", DEFAULT_RATE))
 
+    print(f"Running scan -> url={url}, quick={quick}, threads={threads}, rate={rate}, cookie={cookie}, headers={headers}")
     result = run_scan(url, cookie=cookie, headers=headers, quick=quick, threads=threads, rate=rate)
+
+    print('============ALL COMMANDS EXECUTED AND SENT TO CLIENT SUCCESSFULLY============')
 
     return result, 200
 
