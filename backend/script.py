@@ -7,7 +7,7 @@ from Tools.Ffuf import Ffuf
 from Tools.XSStrike import XSStrike
 from Tools.Sqlmap import Sqlmap
 from Tools.RequestContext import RequestContext
-from config import DEFAULT_URL, DEFAULT_THREADS, DEFAULT_RATE, DEFAULT_QUICK
+from config import DEFAULT_URL, DEFAULT_THREADS, DEFAULT_RATE, DEFAULT_QUICK, RUN_DIR_FUZZ, RUN_FILE_FUZZ, RUN_SUBDOMAIN_FUZZ, RUN_XSS, RUN_SQLI
 
 
 def detect_extensions(base_url):
@@ -62,9 +62,15 @@ def get_wordlist(scan_type, quick, lang_code):
     return path
 
 
-def run_scan(url=DEFAULT_URL, cookie=None, headers=None, quick=DEFAULT_QUICK, threads=DEFAULT_THREADS, rate=DEFAULT_RATE):
+def run_scan(url=DEFAULT_URL, cookie=None, headers=None, quick=DEFAULT_QUICK, threads=DEFAULT_THREADS, rate=DEFAULT_RATE,
+             run_dir_fuzz=RUN_DIR_FUZZ, run_file_fuzz=RUN_FILE_FUZZ, run_subdomain_fuzz=RUN_SUBDOMAIN_FUZZ,
+             run_xss=RUN_XSS, run_sqli=RUN_SQLI):
     url = re.sub(r'^https?://', '', url.strip())
     base_url = 'http://' + url
+
+    for f in ['results_directory.json', 'results_file.json', 'results_subdomain.json']:
+        if os.path.exists(f):
+            os.remove(f)
 
     result = {
         "target": base_url,
@@ -104,60 +110,63 @@ def run_scan(url=DEFAULT_URL, cookie=None, headers=None, quick=DEFAULT_QUICK, th
     lang_code = lang.split('-')[0].lower() if lang else 'en'
 
     # Phase 1: endpoint discovery with ffuf (3 runs)
-    print("\n--- Directory fuzzing ---")
-    dir_cmd = Ffuf()
-    dir_cmd.addAttribute("wordlist", get_wordlist('directory', quick, lang_code))
-    dir_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
-    dir_cmd.addAttribute("threads", threads)
-    dir_cmd.addAttribute("rate", rate)
-    dir_cmd.addAttribute("timeout", 2)
-    dir_cmd.addAttribute("match_status", 200)
-    dir_cmd.addAttribute("ignore_comments")
-    dir_cmd.addAttribute("non_interactive")
-    dir_cmd.addAttribute("auto_calibrate")
-    if extensions:
-        dir_cmd.addAttribute("extensions", extensions)
-    ctx.apply_to_ffuf(dir_cmd)
-    dir_command = dir_cmd.getCommandString() + " -o results_directory.json -of json"
-    result["queries_executed"].append(dir_command)
-    print(f"Running: {dir_command}")
-    os.system(dir_command)
+    if run_dir_fuzz:
+        print("\n--- Directory fuzzing ---")
+        dir_cmd = Ffuf()
+        dir_cmd.addAttribute("wordlist", get_wordlist('directory', quick, lang_code))
+        dir_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
+        dir_cmd.addAttribute("threads", threads)
+        dir_cmd.addAttribute("rate", rate)
+        dir_cmd.addAttribute("timeout", 2)
+        dir_cmd.addAttribute("match_status", 200)
+        dir_cmd.addAttribute("ignore_comments")
+        dir_cmd.addAttribute("non_interactive")
+        dir_cmd.addAttribute("auto_calibrate")
+        if extensions:
+            dir_cmd.addAttribute("extensions", extensions)
+        ctx.apply_to_ffuf(dir_cmd)
+        dir_command = dir_cmd.getCommandString() + " -o results_directory.json -of json"
+        result["queries_executed"].append(dir_command)
+        print(f"Running: {dir_command}")
+        os.system(dir_command)
 
-    print("\n--- File fuzzing ---")
-    file_cmd = Ffuf()
-    file_cmd.addAttribute("wordlist", get_wordlist('file', quick, lang_code))
-    file_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
-    file_cmd.addAttribute("threads", threads)
-    file_cmd.addAttribute("rate", rate)
-    file_cmd.addAttribute("timeout", 2)
-    file_cmd.addAttribute("match_status", 200)
-    file_cmd.addAttribute("ignore_comments")
-    file_cmd.addAttribute("non_interactive")
-    file_cmd.addAttribute("auto_calibrate")
-    ctx.apply_to_ffuf(file_cmd)
-    file_command = file_cmd.getCommandString() + " -o results_file.json -of json"
-    result["queries_executed"].append(file_command)
-    print(f"Running: {file_command}")
-    os.system(file_command)
+    if run_file_fuzz:
+        print("\n--- File fuzzing ---")
+        file_cmd = Ffuf()
+        file_cmd.addAttribute("wordlist", get_wordlist('file', quick, lang_code))
+        file_cmd.addAttribute("target_url", base_url.rstrip('/') + '/FUZZ')
+        file_cmd.addAttribute("threads", threads)
+        file_cmd.addAttribute("rate", rate)
+        file_cmd.addAttribute("timeout", 2)
+        file_cmd.addAttribute("match_status", 200)
+        file_cmd.addAttribute("ignore_comments")
+        file_cmd.addAttribute("non_interactive")
+        file_cmd.addAttribute("auto_calibrate")
+        ctx.apply_to_ffuf(file_cmd)
+        file_command = file_cmd.getCommandString() + " -o results_file.json -of json"
+        result["queries_executed"].append(file_command)
+        print(f"Running: {file_command}")
+        os.system(file_command)
 
-    print("\n--- Subdomain fuzzing ---")
-    hostname = urlparse(base_url).hostname
-    subdomain_url = f"http://FUZZ.{hostname}/"
-    sub_cmd = Ffuf()
-    sub_cmd.addAttribute("wordlist", get_wordlist('subdomain', quick, lang_code))
-    sub_cmd.addAttribute("target_url", subdomain_url)
-    sub_cmd.addAttribute("threads", threads)
-    sub_cmd.addAttribute("rate", rate)
-    sub_cmd.addAttribute("timeout", 2)
-    sub_cmd.addAttribute("match_status", 200)
-    sub_cmd.addAttribute("ignore_comments")
-    sub_cmd.addAttribute("non_interactive")
-    sub_cmd.addAttribute("auto_calibrate")
-    ctx.apply_to_ffuf(sub_cmd)
-    sub_command = sub_cmd.getCommandString() + " -o results_subdomain.json -of json"
-    result["queries_executed"].append(sub_command)
-    print(f"Running: {sub_command}")
-    os.system(sub_command)
+    if run_subdomain_fuzz:
+        print("\n--- Subdomain fuzzing ---")
+        hostname = urlparse(base_url).hostname
+        subdomain_url = f"http://FUZZ.{hostname}/"
+        sub_cmd = Ffuf()
+        sub_cmd.addAttribute("wordlist", get_wordlist('subdomain', quick, lang_code))
+        sub_cmd.addAttribute("target_url", subdomain_url)
+        sub_cmd.addAttribute("threads", threads)
+        sub_cmd.addAttribute("rate", rate)
+        sub_cmd.addAttribute("timeout", 2)
+        sub_cmd.addAttribute("match_status", 200)
+        sub_cmd.addAttribute("ignore_comments")
+        sub_cmd.addAttribute("non_interactive")
+        sub_cmd.addAttribute("auto_calibrate")
+        ctx.apply_to_ffuf(sub_cmd)
+        sub_command = sub_cmd.getCommandString() + " -o results_subdomain.json -of json"
+        result["queries_executed"].append(sub_command)
+        print(f"Running: {sub_command}")
+        os.system(sub_command)
 
     # Phase 2: load results by category
     for fname, category in [
@@ -166,7 +175,6 @@ def run_scan(url=DEFAULT_URL, cookie=None, headers=None, quick=DEFAULT_QUICK, th
         ('results_subdomain.json', 'subdomain'),
     ]:
         if not os.path.exists(fname):
-            print(f"{fname} not found — skipping")
             continue
         with open(fname) as f:
             data = json.load(f)
@@ -182,44 +190,49 @@ def run_scan(url=DEFAULT_URL, cookie=None, headers=None, quick=DEFAULT_QUICK, th
         print("No endpoints discovered.")
         return result
 
-    # Phase 3: XSS with XSStrike
     with open('seeds.txt', 'w') as f:
         f.write('\n'.join(all_endpoints))
 
-    xs = XSStrike()
-    xs.addAttribute("url", base_url)
-    xs.addAttribute("crawl")
-    xs.addAttribute("level", 3)
-    xs.addAttribute("seeds", "seeds.txt")
-    xs.addAttribute("skip")
-    ctx.apply_to_xsstrike(xs)
-    xsstrike_command = xs.getCommandString()
-    result["queries_executed"].append(xsstrike_command)
-    print(f"\nRunning XSStrike: {xsstrike_command}")
-    os.system(xsstrike_command + " > xss_output.txt")
+    # Phase 3: XSS with XSStrike
+    if run_xss:
 
-    with open('xss_output.txt') as f:
-        lines = f.readlines()
-    result["xss"]["confirmed"] = [l.strip() for l in lines if '[++]' in l]
-    result["xss"]["potential"] = [l.strip() for l in lines if 'potentially vulnerable' in l.lower()]
+        xs = XSStrike()
+        xs.addAttribute("url", base_url)
+        xs.addAttribute("crawl")
+        xs.addAttribute("level", 3)
+        xs.addAttribute("seeds", "seeds.txt")
+        xs.addAttribute("skip")
+        ctx.apply_to_xsstrike(xs)
+        xsstrike_command = xs.getCommandString()
+        result["queries_executed"].append(xsstrike_command)
+        print(f"\nRunning XSStrike: {xsstrike_command}")
+        os.system(xsstrike_command + " > xss_output.txt")
+
+        with open('xss_output.txt') as f:
+            lines = f.readlines()
+        result["xss"]["confirmed"] = [l.strip() for l in lines if '[++]' in l]
+        result["xss"]["potential"] = [l.strip() for l in lines if 'potentially vulnerable' in l.lower()]
 
     # Phase 4: SQLi with sqlmap
-    sqm = Sqlmap()
-    sqm.addAttribute("urls_file", "seeds.txt")
-    sqm.addAttribute("batch")
-    sqm.addAttribute("forms")
-    sqm.addAttribute("level", 1)
-    sqm.addAttribute("risk", 1)
-    ctx.apply_to_sqlmap(sqm)
-    sqlmap_command = sqm.getCommandString()
-    result["queries_executed"].append(sqlmap_command)
-    print(f"\nRunning sqlmap: {sqlmap_command}")
-    os.system(sqlmap_command + " > sqli_output.txt 2>&1")
+    if run_sqli:
+        sqm = Sqlmap()
+        sqm.addAttribute("url", base_url)
+        sqm.addAttribute("urls_file", "seeds.txt")
+        sqm.addAttribute("batch")
+        sqm.addAttribute("forms")
+        sqm.addAttribute("crawl", 2)
+        sqm.addAttribute("level", 1)
+        sqm.addAttribute("risk", 1)
+        ctx.apply_to_sqlmap(sqm)
+        sqlmap_command = sqm.getCommandString()
+        result["queries_executed"].append(sqlmap_command)
+        print(f"\nRunning sqlmap: {sqlmap_command}")
+        os.system(sqlmap_command + " > sqli_output.txt 2>&1")
 
-    with open('sqli_output.txt', errors='ignore') as f:
-        sqli_lines = f.readlines()
-    result["sqli"]["confirmed"] = [l.strip() for l in sqli_lines if '[INFO]' in l and 'injectable' in l.lower()]
-    result["sqli"]["potential"] = [l.strip() for l in sqli_lines if 'might be injectable' in l.lower()]
+        with open('sqli_output.txt', errors='ignore') as f:
+            sqli_lines = f.readlines()
+        result["sqli"]["confirmed"] = [l.strip() for l in sqli_lines if '[INFO]' in l and 'injectable' in l.lower()]
+        result["sqli"]["potential"] = [l.strip() for l in sqli_lines if 'might be injectable' in l.lower()]
 
     return result
 

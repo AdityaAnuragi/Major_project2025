@@ -16,6 +16,7 @@ class Sqlmap:
         # flag-only attributes (value is ignored)
         "time_sec":  lambda value: f"--time-sec={value}",
         "technique": lambda value: f"--technique={value}",
+        "crawl":     lambda value: f"--crawl={value}",
         "batch":     lambda value: "--batch",
         "forms":     lambda value: "--forms",
     }

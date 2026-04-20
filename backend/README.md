@@ -63,49 +63,66 @@ Health check.
 
 Run a full reconnaissance scan against a target.
 
-**Request body (JSON):**
+**Request body (JSON) — all fields optional:**
 
-| Field | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `url` | string | No | `demo.testfire.net` | Target domain (no `http://` needed) |
-| `cookie` | string | No | — | Session cookie value, e.g. `JSESSIONID=abc123` |
-| `headers` | string[] | No | — | Extra headers, e.g. `["Authorization: Bearer eyJ…"]` |
-| `quick` | boolean | No | `false` | Use smaller wordlists for a faster scan |
-| `threads` | number | No | `40` | ffuf thread count |
-| `rate` | number | No | `100` | ffuf rate limit (req/s) |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `url` | string | `demo.testfire.net` | Target domain (`http://` not needed) |
+| `cookie` | string | — | Session cookie, e.g. `JSESSIONID=abc123` |
+| `headers` | string[] | — | Extra headers, e.g. `["Authorization: Bearer eyJ…"]` |
+| `quick` | boolean | `true` | Use smaller wordlists for faster scan |
+| `threads` | number | `100` | ffuf thread count |
+| `rate` | number | `100` | ffuf rate limit (req/s) |
+| `run_dir_fuzz` | boolean | `true` | Run directory fuzzing (ffuf) |
+| `run_file_fuzz` | boolean | `false` | Run file fuzzing (ffuf) |
+| `run_subdomain_fuzz` | boolean | `false` | Run subdomain fuzzing (ffuf) |
+| `run_xss` | boolean | `true` | Run XSS scan (XSStrike) |
+| `run_sqli` | boolean | `false` | Run SQLi scan (sqlmap) |
 
-**Example request:**
+**Recommended request — send empty body, defaults are already tuned for demo:**
 ```json
-{
-  "url": "testphp.vulnweb.com",
-  "quick": true
-}
+{}
 ```
 
-**Response:**
+Defaults applied when fields are omitted:
+- `url` → `demo.testfire.net`
+- `quick` → `true`
+- `threads` → `100`
+- `rate` → `100`
+- `run_dir_fuzz` → `true`
+- `run_file_fuzz` → `false`
+- `run_subdomain_fuzz` → `false`
+- `run_xss` → `true`
+- `run_sqli` → `false`
+
+**Response shape:**
 ```json
 {
-  "target": "http://testphp.vulnweb.com",
-  "server_tech": "PHP",
+  "target": "http://demo.testfire.net",
+  "server_tech": "Java/Tomcat",
   "language": "en",
   "queries_executed": [
-    "ffuf -w wordlists/full/en/directory.txt -u http://testphp.vulnweb.com/FUZZ ...",
-    "ffuf -w wordlists/full/en/file.txt ...",
-    "ffuf -w wordlists/full/en/subdomain.txt ...",
-    "python vendor/XSStrike/xsstrike.py -u http://testphp.vulnweb.com --crawl ..."
+    "ffuf -w wordlists/quick/en/directory.txt:FUZZ -u http://demo.testfire.net/FUZZ ...",
+    "python vendor/XSStrike/xsstrike.py -u http://demo.testfire.net --crawl -l 3 --seeds seeds.txt --skip",
+    "python vendor/sqlmap/sqlmap.py -u http://demo.testfire.net -m seeds.txt --batch --forms --crawl=2 ..."
   ],
   "endpoints": {
-    "directory": ["http://testphp.vulnweb.com/admin/", "http://testphp.vulnweb.com/images/"],
-    "file": ["http://testphp.vulnweb.com/search.php"],
-    "subdomain": ["http://www.testphp.vulnweb.com/"]
+    "directory": ["http://demo.testfire.net/bank/"],
+    "file": ["http://demo.testfire.net/style.css"],
+    "subdomain": []
   },
   "xss": {
-    "confirmed": ["[++] XSS found at http://testphp.vulnweb.com/search.php?searchFor=…"],
-    "potential": []
+    "confirmed": [
+      "[++] Vulnerable webpage: http://demo.testfire.net/search.jsp",
+      "[++] Vector for query: <hTMl/+/onMOUsEoVER%09=%09confirm()//"
+    ],
+    "potential": [
+      "Potentially vulnerable objects found at http://demo.testfire.net/swagger/index.html"
+    ]
   },
   "sqli": {
     "confirmed": [],
-    "potential": ["parameter 'id' might be injectable"]
+    "potential": []
   }
 }
 ```
