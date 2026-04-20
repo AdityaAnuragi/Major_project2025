@@ -7,9 +7,9 @@ from Tools.Ffuf import Ffuf
 from Tools.XSStrike import XSStrike
 from Tools.Sqlmap import Sqlmap
 from Tools.RequestContext import RequestContext
+from config import DEFAULT_URL, DEFAULT_THREADS, DEFAULT_RATE, DEFAULT_QUICK
 
-default_url = 'demo.testfire.net'
-base_url = 'http://' + (input(f'Enter the base URL (http:// isn\'t need) (press ENTER for default [{default_url}]) : ') or default_url)
+base_url = 'http://' + (input(f'Enter the base URL (http:// isn\'t need) (press ENTER for default [{DEFAULT_URL}]) : ') or DEFAULT_URL)
 
 ctx = RequestContext()
 
@@ -24,13 +24,13 @@ if extra:
         if h:
             ctx.add_header(h)
 
-quick = input("Quick scan? [y/N] (Default: No): ").strip().lower() == 'y'
+quick = input("Quick scan? [y/N] (Default: No): ").strip().lower() == 'y' or DEFAULT_QUICK
 
-threads_input = input("Threads (press ENTER for default [40]): ").strip()
-threads = int(threads_input) if threads_input else 40
+threads_input = input(f"Threads (press ENTER for default [{DEFAULT_THREADS}]): ").strip()
+threads = int(threads_input) if threads_input else DEFAULT_THREADS
 
-rate_input = input("Rate limit req/s (press ENTER for default [100]): ").strip()
-rate = int(rate_input) if rate_input else 100
+rate_input = input(f"Rate limit req/s (press ENTER for default [{DEFAULT_RATE}]): ").strip()
+rate = int(rate_input) if rate_input else DEFAULT_RATE
 
 # Pre-phase: detect server tech to choose extensions automatically
 def detect_extensions(base_url):
