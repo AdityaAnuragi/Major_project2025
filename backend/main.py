@@ -1,71 +1,45 @@
 from flask import Flask, request
-
-import subprocess
-import os
+from flask_cors import CORS
+from config import DEFAULT_URL, DEFAULT_THREADS, DEFAULT_RATE, DEFAULT_QUICK, RUN_DIR_FUZZ, RUN_FILE_FUZZ, RUN_SUBDOMAIN_FUZZ, RUN_XSS, RUN_SQLI
+from script import run_scan
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.get("/")
 def health() -> tuple[dict, int]:
-    print("Inside the health check GET endpoint")
-    
-    # result = subprocess.run(
-    #     ['ffuf', '-u', 'http://demo.testfire.net/FUZZ', '-w', 'words.txt'],
-    #     shell=True,
-    #     capture_output=True,
-    #     text=True,
-    #     check=True
-    # )
-    # print("STDOUT:", result.stdout)
-    # print("STDERR:", result.stderr)
-
-    os.system('ffuf -u http://demo.testfire.net/FUZZ -w words.txt')
-
+    print('inside health endpoint')
     return {"status": "ok"}, 200
 
 
-@app.post("/jobs")
-def create_job() -> tuple[dict, int]:
-    """Accept job options and respond with the parsed timeout."""
+@app.post("/scan")
+def create_scan() -> tuple[dict, int]:
     data = request.get_json(silent=True) or {}
-    timeout = data.get("timeout") or 10
+    print("Received:", data)
 
-    print(data, timeout)
+    url = data.get("url") or DEFAULT_URL
+    cookie = data.get("cookie") or None
+    headers = data.get("headers") or None
+    quick = bool(data.get("quick", DEFAULT_QUICK))
+    threads = int(data.get("threads", DEFAULT_THREADS))
+    rate = int(data.get("rate", DEFAULT_RATE))
+    run_dir_fuzz = bool(data.get("run_dir_fuzz", RUN_DIR_FUZZ))
+    run_file_fuzz = bool(data.get("run_file_fuzz", RUN_FILE_FUZZ))
+    run_subdomain_fuzz = bool(data.get("run_subdomain_fuzz", RUN_SUBDOMAIN_FUZZ))
+    run_xss = bool(data.get("run_xss", RUN_XSS))
+    run_sqli = bool(data.get("run_sqli", RUN_SQLI))
 
-    # Basic validation: ensure timeout is a positive number.
-    # try:
-    #     timeout_val = float(timeout)
-    # except (TypeError, ValueError):
-    #     return {"error": "timeout must be a number"}, 400
-    
-    command = ["ffuf", "-u", "https://example.com/FUZZ", "-w", "words.txt", "-timeout", str(timeout)]
-    commandAsAString = " ".join(command)
-    print(commandAsAString)
-    
-    # Option 1: Capture all output (buffered, waits for completion)
-    result = subprocess.run(command, check=True, capture_output=True, text=True)
-    
-    # ffuf sends progress and status to stderr, not stdout
-    print("STDOUT:", result.stdout)
-    print("STDERR:", result.stderr)
-    
-    # Option 2: For real-time streaming output (uncomment if you want to see progress as it happens):
-    # process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, 
-    #                           text=True, bufsize=1, universal_newlines=True)
-    # output_lines = []
-    # for line in process.stdout:
-    #     print(line, end='')  # Print in real-time
-    #     output_lines.append(line)
-    # process.wait()
-    # full_output = ''.join(output_lines)
+    print(f"Running scan -> url={url}, quick={quick}, threads={threads}, rate={rate}, cookie={cookie}, headers={headers}")
+    print(f"  phases -> dir_fuzz={run_dir_fuzz}, file_fuzz={run_file_fuzz}, subdomain_fuzz={run_subdomain_fuzz}, xss={run_xss}, sqli={run_sqli}")
+    result = run_scan(url, cookie=cookie, headers=headers, quick=quick, threads=threads, rate=rate,
+                      run_dir_fuzz=run_dir_fuzz, run_file_fuzz=run_file_fuzz, run_subdomain_fuzz=run_subdomain_fuzz,
+                      run_xss=run_xss, run_sqli=run_sqli)
 
-    # os.system('fuff -h')
+    print('============ALL COMMANDS EXECUTED AND SENT TO CLIENT SUCCESSFULLY============')
 
-    return {"received_timeout": timeout, "commandPreview": commandAsAString}, 200
+    return result, 200
 
-    # return {"status": "ok"}, 200
 
 if __name__ == "__main__":
-    # Bind to all interfaces for container/VM use; adjust as needed.
     app.run(host="0.0.0.0", port=5000, debug=True)

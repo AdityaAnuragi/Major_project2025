@@ -10,6 +10,9 @@ class Ffuf:
         "match_status": lambda value: f"-mc {value}",
         "extensions": lambda value: f"-e {value}",
         "filter_size": lambda value: f"-fs {value}",
+        "rate": lambda value: f"-rate {value}",
+        "timeout": lambda value: f"-timeout {value}",
+        "header": lambda value: f'-H "{value}"',
 
         # flag-only attributes (value is ignored)
         "follow_redirects": lambda value: "-r",
@@ -17,6 +20,7 @@ class Ffuf:
         "non_interactive": lambda value: "-noninteractive",
         "recursion": lambda value: "-recursion",
         "silent_mode": lambda value: "-s",
+        "auto_calibrate": lambda value: "-ac",
     }
 
 
