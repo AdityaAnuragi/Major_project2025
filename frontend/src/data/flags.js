@@ -1,0 +1,66 @@
+// Flag definitions for each tool
+export const COMMON_FLAGS = [
+  { value: 'timeout', label: '--timeout', description: 'Request timeout in seconds', hasValue: true, placeholder: 'e.g. 30' },
+  { value: 'proxy', label: '--proxy', description: 'Use HTTP proxy', hasValue: true, placeholder: 'http://127.0.0.1:8080' },
+  { value: 'output', label: '--output', description: 'Output file path', hasValue: true, placeholder: '/path/to/output.txt' },
+  { value: 'threads', label: '--threads', description: 'Number of threads', hasValue: true, placeholder: 'e.g. 10' },
+  { value: 'delay', label: '--delay', description: 'Delay between requests (ms)', hasValue: true, placeholder: 'e.g. 500' },
+  { value: 'verbose', label: '--verbose', description: 'Enable verbose output', hasValue: false },
+  { value: 'quiet', label: '--quiet', description: 'Suppress non-essential output', hasValue: false },
+  { value: 'headers', label: '--headers', description: 'Custom HTTP headers', hasValue: true, placeholder: 'Header: Value' },
+  { value: 'cookies', label: '--cookies', description: 'Custom cookies', hasValue: true, placeholder: 'name=value; name2=value2' },
+  { value: 'auth', label: '--auth', description: 'HTTP Authentication (user:pass)', hasValue: true, placeholder: 'username:password' },
+  { value: 'user-agent', label: '--user-agent', description: 'Custom User-Agent string', hasValue: true, placeholder: 'Mozilla/5.0...' },
+  { value: 'follow-redirects', label: '--follow-redirects', description: 'Follow HTTP redirects', hasValue: false },
+]
+
+export const FFUF_FLAGS = [
+  { value: 'w', label: '-w', description: 'Wordlist path', hasValue: true, placeholder: '/path/to/wordlist.txt' },
+  { value: 'u', label: '-u', description: 'Target URL with FUZZ keyword', hasValue: true, placeholder: 'https://target.com/FUZZ' },
+  { value: 'mc', label: '-mc', description: 'Match HTTP status codes', hasValue: true, placeholder: 'e.g. 200,301,302' },
+  { value: 'fc', label: '-fc', description: 'Filter HTTP status codes', hasValue: true, placeholder: 'e.g. 404,403' },
+  { value: 'fs', label: '-fs', description: 'Filter response size', hasValue: true, placeholder: 'e.g. 1234' },
+  { value: 'fw', label: '-fw', description: 'Filter word count in response', hasValue: true, placeholder: 'e.g. 20' },
+  { value: 'rate', label: '-rate', description: 'Rate of requests per second', hasValue: true, placeholder: 'e.g. 50' },
+  { value: 'recursion', label: '-recursion', description: 'Enable recursive fuzzing', hasValue: false },
+  { value: 'recursion-depth', label: '-recursion-depth', description: 'Max recursion depth', hasValue: true, placeholder: 'e.g. 2' },
+  { value: 'e', label: '-e', description: 'Extensions to append', hasValue: true, placeholder: '.php,.html,.js' },
+  { value: 'H', label: '-H', description: 'Custom header', hasValue: true, placeholder: 'Authorization: Bearer ...' },
+  { value: 'X', label: '-X', description: 'HTTP method', hasValue: true, placeholder: 'POST' },
+  { value: 'D', label: '-D', description: 'POST data', hasValue: true, placeholder: 'username=FUZZ&pass=test' },
+  { value: 'ac', label: '-ac', description: 'Auto-calibrate filtering', hasValue: false },
+  { value: 'ic', label: '-ic', description: 'Ignore wordlist comments', hasValue: false },
+]
+
+export const SQLMAP_FLAGS = [
+  { value: 'u', label: '-u', description: 'Target URL', hasValue: true, placeholder: 'https://target.com/page?id=1' },
+  { value: 'data', label: '--data', description: 'POST data to inject', hasValue: true, placeholder: 'user=foo&pass=bar' },
+  { value: 'dbms', label: '--dbms', description: 'Force specific DBMS', hasValue: true, placeholder: 'mysql / postgresql / mssql' },
+  { value: 'level', label: '--level', description: 'Test level (1-5)', hasValue: true, placeholder: '1' },
+  { value: 'risk', label: '--risk', description: 'Risk level (1-3)', hasValue: true, placeholder: '1' },
+  { value: 'dbs', label: '--dbs', description: 'Enumerate databases', hasValue: false },
+  { value: 'tables', label: '--tables', description: 'Enumerate tables', hasValue: false },
+  { value: 'dump', label: '--dump', description: 'Dump database table entries', hasValue: false },
+  { value: 'D', label: '-D', description: 'Target database name', hasValue: true, placeholder: 'database_name' },
+  { value: 'T', label: '-T', description: 'Target table name', hasValue: true, placeholder: 'table_name' },
+  { value: 'C', label: '-C', description: 'Target column name(s)', hasValue: true, placeholder: 'col1,col2' },
+  { value: 'batch', label: '--batch', description: 'Never ask for user input', hasValue: false },
+  { value: 'random-agent', label: '--random-agent', description: 'Use random HTTP User-Agent', hasValue: false },
+  { value: 'tor', label: '--tor', description: 'Use the Tor network', hasValue: false },
+  { value: 'technique', label: '--technique', description: 'Injection techniques', hasValue: true, placeholder: 'BEUSTQ' },
+]
+
+export const XSSTRIKE_FLAGS = [
+  { value: 'url', label: '--url', description: 'Target URL', hasValue: true, placeholder: 'https://target.com/search?q=' },
+  { value: 'data', label: '--data', description: 'POST data', hasValue: true, placeholder: 'param=value' },
+  { value: 'headers', label: '--headers', description: 'Custom HTTP headers', hasValue: true, placeholder: 'Header: Value' },
+  { value: 'fuzzer', label: '--fuzzer', description: 'Run XSS fuzzer', hasValue: false },
+  { value: 'blind', label: '--blind', description: 'Blind XSS testing', hasValue: false },
+  { value: 'crawl', label: '--crawl', description: 'Crawl the target', hasValue: false },
+  { value: 'skip', label: '--skip', description: 'Skip confirmation prompts', hasValue: false },
+  { value: 'encode', label: '--encode', description: 'Encode payload (1-15)', hasValue: true, placeholder: 'e.g. 1' },
+  { value: 'timeout', label: '--timeout', description: 'Request timeout', hasValue: true, placeholder: 'e.g. 10' },
+  { value: 'params', label: '--params', description: 'Test specific parameters', hasValue: true, placeholder: 'param1,param2' },
+  { value: 'seeds', label: '--seeds', description: 'Crawl seed URLs file', hasValue: true, placeholder: '/path/to/seeds.txt' },
+  { value: 'level', label: '--level', description: 'Crawl depth level', hasValue: true, placeholder: 'e.g. 2' },
+]
